@@ -17,7 +17,7 @@ struct list {
 List *new_list = NULL;
 
 void checkIndex(int index) {
-    if (index < 0 || index > new_list->count) {
+    if (index < 0 || (new_list != NULL && index > new_list->count)) {
         printf("ERROR: Index out of bound!\n");
         exit(-1);
     }
@@ -25,6 +25,8 @@ void checkIndex(int index) {
 
 void insertAt(int index, int data) {
     Node *new_node = NULL;
+
+    checkIndex(index);
 
     new_node = (Node *)malloc(sizeof(Node));
     new_node->data = data;
@@ -35,8 +37,6 @@ void insertAt(int index, int data) {
         new_list->head = NULL;
         new_list->count = 0;
     }
-
-    checkIndex(index);
     
     if (index == 0) {
         new_node->next = new_list->head;
@@ -61,11 +61,17 @@ void deleteAt(int index) {
 
     checkIndex(index);
 
-    for (i = 0; i < index - 1; i++) {
-        current_node = current_node->next;
+    if (index == 0) {
+        target_node = current_node;
+        new_list->head = target_node->next;
+    } else {
+        for (i = 0; i < index - 1; i++) {
+            current_node = current_node->next;
+        }
+        target_node = current_node->next;
+        current_node->next = current_node->next->next;
     }
-    target_node = current_node->next;
-    current_node->next = current_node->next->next;
+
     free(target_node);
     target_node = NULL;
     
