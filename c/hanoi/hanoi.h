@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include "stack.h"
+#include "../stack/stack.h"
 
 #define HANOI_TOPS 3
 
-static List *list_hanoi[HANOI_TOPS];
+static list *list_hanoi[HANOI_TOPS];
 static int top_size = 0;
 static int hanoi_initialized = 0;
 
@@ -13,25 +13,59 @@ void init_hanoi(int size, int from)
 
     top_size = size;
 
-    for (i = 0; i < HANOI_TOPS; i++)
-        initList(&list_hanoi[i]);
-    
-    for (i = 0; i < top_size; i++)
-        push(list_hanoi[from], top_size - i);
+    for (i = 0; i < HANOI_TOPS; i++) {
+        list_hanoi[i] = (list *)malloc(sizeof(list));
+        list_hanoi[i]->head = NULL;
+        list_hanoi[i]->tail = NULL;
+        list_hanoi[i]->count = 0;
+    }
+
+    for (i = 0; i < top_size; i++) {
+        new_list = list_hanoi[from];
+        push(top_size - i);
+    }
 
     hanoi_initialized = 1;
 }
 
+// *data 변수에 해당 index 의 값을 저장
+int getAt(list *list, int *data, int index)
+{
+    int i;
+    node *current_node = NULL;
+
+    if (list == NULL)
+        return -1;
+
+    if (list->count == 0)
+        return -1;
+
+    if (index < 0 || index > list->count - 1)
+        return -1;
+
+    current_node = list->head;
+    for (i = 0; i < index; i++)
+        current_node = current_node->next;
+
+    *data = current_node->data;
+
+    return 0;
+}
+
 void move_hanoi(int from, int to)
 {
-    int data = 0;
+    int data;
     int res;
-    
-    res = getAt(list_hanoi[from], &data, list_hanoi[from]->count - 1);
+
+    if (list_hanoi[from] == NULL || list_hanoi[to] == NULL)
+        return;
+
+    new_list = list_hanoi[from];
+    res = pop(&data);
     if (res)
         return;
-    pop(list_hanoi[from]);
-    push(list_hanoi[to], data);
+    new_list = list_hanoi[to];
+    push(data);
 }
 
 void print_hanoi(void) {
@@ -41,7 +75,7 @@ void print_hanoi(void) {
 
     for (i = 0; i < top_size + 1; i++) { // 3개의 탑을 하나씩 순회 하면서 위에서 부터 그림
         for (j = 0; j < 3; j++) { // 3개의 탑을 하나씩 순회
-            int data = 0; // 몇번째 원반 인지 구분
+            int data; // 몇번째 원반 인지 구분
             int is_draw = 0; // 꽂혀 있는게 있는지 체크
             int start_pos, end_pos; // 원반의 양 끝부분
             int res;
@@ -50,6 +84,7 @@ void print_hanoi(void) {
                 is_draw = 0;
             else { // 꽂혀 있는게 있는지 체크
                 res = getAt(list_hanoi[j], &data, top_size - i);
+                new_list = list_hanoi[j];
                 if (!res)
                     is_draw = 1;
             }
@@ -108,7 +143,9 @@ void free_all_hanoi_list()
     int i;
 
     for (i = 0; i < HANOI_TOPS; i++) {
-        if (list_hanoi[i] != NULL)
-            freeAll(list_hanoi[i]);
+        if (list_hanoi[i] != NULL) {
+            new_list = list_hanoi[i];
+            freeAll();
+        }
     }
 }
