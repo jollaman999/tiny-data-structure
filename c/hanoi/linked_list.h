@@ -112,24 +112,6 @@ void deleteAt(List *list, int index)
     list->count--;
 }
 
-void printAll(List *list)
-{
-    printf("[");
-    if (list != NULL) {
-        Node *current_node = list->head;
-        int i;
-
-        for (i = 0; i < list->count; i++) {
-            if (i == list->count - 1)
-                printf("%d", current_node->data);
-            else
-                printf("%d, ", current_node->data);
-            current_node = current_node->next;
-        }
-    }
-    printf("]\n");
-}
-
 void freeAll(List *list)
 {
     Node *current_node = list->head;
