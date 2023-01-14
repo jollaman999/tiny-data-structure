@@ -17,23 +17,21 @@ struct list {
 };
 
 list *new_list = NULL;
-    
-void checkIndex(int index) {
-    if (index < 0 || (new_list != NULL && index > new_list->count)) {
-        printf("ERROR: Index out of bound!\n");
-        exit(-1);
-    }
+
+void initList()
+{
+    new_list = (list *)malloc(sizeof(list));
+    new_list->head = NULL;
+    new_list->tail = NULL;
+    new_list->count = 0;
 }
 
-void insertAt(int index, int data) {
+void insertAt(int index, int data)
+{
     node *new_node = NULL;
 
-    if (new_list == NULL) {
-        new_list = (list *)malloc(sizeof(list));
-        new_list->head = NULL;
-        new_list->tail = NULL;
-        new_list->count = 0;
-    }
+    if (new_list == NULL)
+        initList();
 
     if (index < 0 || index > new_list->count) {
         printf("ERROR: Index out of bound!\n");
