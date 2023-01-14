@@ -1,6 +1,8 @@
 #include "stack.h"
 
 int main() {
+    int data;
+
     push(1);
     push(3);
     push(5);
@@ -9,23 +11,33 @@ int main() {
     printAll();
     // [1, 3, 5, 7, 9]
 
-    pop();
+    pop(&data);
+    printf("%d\n", data);
+    // 9
     printAll();
     // [1, 3, 5, 7]
 
-    pop();
+    pop(&data);
+    printf("%d\n", data);
+    // 7
     printAll();
     // [1, 3, 5]
 
-    pop();
+    pop(&data);
+    printf("%d\n", data);
+    // 5
     printAll();
     // [1, 3]
 
-    pop();
+    pop(&data);
+    printf("%d\n", data);
+    // 3
     printAll();
     // [1]
 
-    pop();
+    pop(&data);
+    printf("%d\n", data);
+    // 1
     printAll();
     // []
 
