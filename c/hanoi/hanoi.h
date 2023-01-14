@@ -35,51 +35,46 @@ void move_hanoi(int n, int from, int to)
 }
 
 void print_hanoi(void) {
-    int ch_total = (top_size - 1) * 2 + 3;
-    int stick_pos = ch_total / 2;
+    int ch_total = (top_size - 1) * 2 + 3; // 원반의 반쪽 * 2 + (원반의 양끝(2) + 막대기 가운데(1))
+    int stick_pos = ch_total / 2; // 막대기 가운데 부분
     int i, j, k;
 
-    for (i = 0; i < top_size + 1; i++) { // 3개의 탑을 하나씩 순회하면서 위에서 부터 그림
-        for (j = 0; j < 3; j++) { // 3개의 하나씩 순회
-            if (i == 0) { // 제일 위쪽의 꽂혀 있는게 없는 부분을 그림
+    for (i = 0; i < top_size + 1; i++) { // 3개의 탑을 하나씩 순회 하면서 위에서 부터 그림
+        for (j = 0; j < 3; j++) { // 3개의 탑을 하나씩 순회
+            int data = 0;
+            int is_draw = 0; // 꽂혀 있는게 있는지 체크
+            int start_pos, end_pos; // 원반의 양 끝부분
+            int res;
+
+            if (i == 0) // 맨 윗 부분은 꽂혀 있는것 없이 막대기 만 그림
+                is_draw = 0;
+            else { // 꽂혀 있는게 있는지 체크
+                res = getAt(list_hanoi[j], &data, top_size - i);
+                if (!res)
+                    is_draw = 1;
+            }
+
+            if (is_draw) {
+                start_pos = top_size - data;
+                end_pos = stick_pos + data;
+                for (k = 0; k < ch_total; k++) {
+                    if (k == start_pos)
+                        printf("┌");
+                    else if (k == end_pos)
+                        printf("┐");
+                    else if (k == stick_pos)
+                        printf("│");
+                    else if (k > start_pos && k < end_pos)
+                        printf("─");
+                    else
+                        printf(" ");
+                }
+            } else {
                 for (k = 0; k < ch_total; k++) {
                     if (k == stick_pos)
                         printf("│");
                     else
                         printf(" ");
-                }
-            } else { // 꽂혀있는게 있는지 체크하면서 그림
-                int data = 0;
-                int is_draw = 0;
-                int start_pos, end_pos;
-                int res;
-                
-                res = getAt(list_hanoi[j], &data, top_size - i);
-                if (!res)
-                    is_draw = 1;
-                
-                if (is_draw) {
-                    start_pos = top_size - data;
-                    end_pos = stick_pos + data;
-                    for (k = 0; k < ch_total; k++) {
-                        if (k == start_pos)
-                            printf("┌");
-                        else if (k == end_pos)
-                            printf("┐");
-                        else if (k == stick_pos)
-                            printf("│");
-                        else if (k > start_pos && k < end_pos)
-                            printf("─");
-                        else
-                            printf(" ");
-                    }
-                } else {
-                    for (k = 0; k < ch_total; k++) {
-                        if (k == stick_pos)
-                            printf("│");
-                        else
-                            printf(" ");
-                    }
                 }
             }
             printf("　");

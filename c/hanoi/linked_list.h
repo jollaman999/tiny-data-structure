@@ -26,6 +26,7 @@ int getListSize(List *list)
     return list->count;
 }
 
+// *data 변수에 해당 index 의 값을 저장
 int getAt(List *list, int *data, int index)
 {
     int i;
@@ -99,9 +100,8 @@ void deleteAt(List *list, int index)
         target_node = current_node;
         list->head = target_node->next;
     } else {
-        for (i = 0; i < index - 1; i++) {
+        for (i = 0; i < index - 1; i++)
             current_node = current_node->next;
-        }
         target_node = current_node->next;
         current_node->next = current_node->next->next;
     }
@@ -130,7 +130,8 @@ void printAll(List *list)
     printf("]\n");
 }
 
-void freeAll(List *list) {
+void freeAll(List *list)
+{
     Node *current_node = list->head;
     Node *next_node = NULL;
     int i;
