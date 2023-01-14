@@ -1,23 +1,23 @@
 #include <malloc.h>
 #include <stdlib.h>
 
-typedef struct node Node;
-typedef struct list List;
+typedef struct node node;
+typedef struct list list;
 
 struct node {
     int data;
-    Node *prev;
-    Node *next;
+    node *prev;
+    node *next;
 };
 
 struct list {
-    Node *head;
-    Node *tail;
+    node *head;
+    node *tail;
     int count;
 };
 
-List *new_list = NULL;
-
+list *new_list = NULL;
+    
 void checkIndex(int index) {
     if (index < 0 || (new_list != NULL && index > new_list->count)) {
         printf("ERROR: Index out of bound!\n");
@@ -26,75 +26,87 @@ void checkIndex(int index) {
 }
 
 void insertAt(int index, int data) {
-    Node *new_node = NULL;
+    node *new_node = NULL;
 
-    checkIndex(index);
+    if (new_list == NULL) {
+        new_list = (list *)malloc(sizeof(list));
+        new_list->head = NULL;
+        new_list->tail = NULL;
+        new_list->count = 0;
+    }
 
-    new_node = (Node *)malloc(sizeof(Node));
+    if (index < 0 || index > new_list->count) {
+        printf("ERROR: Index out of bound!\n");
+        exit(-1);
+    }
+
+    new_node = (node *)malloc(sizeof(node));
     new_node->data = data;
     new_node->prev = NULL;
     new_node->next = NULL;
-
-    if (new_list == NULL) {
-        new_list = (List *)malloc(sizeof(List));
-        new_list->head = NULL;
-        new_list->count = 0;
-    }
     
     if (index == 0) {
         new_node->next = new_list->head;
+        if (new_list->count == 0)
+            new_list->tail = new_node;
         new_list->head = new_node;
+    } else if (index == new_list->count) {
+        new_node->prev = new_list->tail;
+        new_list->tail->next = new_node;
         new_list->tail = new_node;
     } else {
-        Node *current_node = new_list->head;
+        node *current_node = new_list->head;
         int i;
 
-        if (index == new_list->count)
-            new_list->tail = new_node;
-
-        for (i = 0; i < index - 1; i++) {
+        for (i = 0; i < index - 1; i++)
             current_node = current_node->next;
-        }
-        new_node->prev = current_node;
+    
         new_node->next = current_node->next;
+        new_node->prev = current_node;
+        current_node->next->prev = new_node;
         current_node->next = new_node;
     }
     new_list->count++;
 }
 
-void deleteAt(int index) {
-    Node *current_node = new_list->head;
-    Node *target_node = NULL;
+node *deleteAt(int index) {
+    node *current_node = new_list->head;
+    node *deleted_node = NULL;
     int i;
 
-    checkIndex(index);
+    if (index < 0 || (new_list != NULL && index > new_list->count - 1)) {
+        printf("ERROR: Index out of bound!\n");
+        exit(-1);
+    }
 
     if (index == 0) {
-        target_node = current_node;
-        new_list->head = target_node->next;
-        if (new_list->head != NULL)
+        deleted_node = current_node;
+        new_list->head = deleted_node->next;
+        if (deleted_node->next != NULL)
             new_list->head->prev = NULL;
+        else
+            new_list->tail = NULL;
+    } else if (index == new_list->count - 1) {
+        deleted_node = new_list->tail;
+        deleted_node->prev->next = NULL;
+        new_list->tail = deleted_node->prev;
     } else {
         for (i = 0; i < index - 1; i++) {
             current_node = current_node->next;
         }
-        target_node = current_node->next;
-        current_node->next = target_node->next;
-        if (target_node->next != NULL)
-            target_node->next->prev = current_node;
+        deleted_node = current_node->next;
+        if (deleted_node->next != NULL)
+            deleted_node->next->prev = current_node;
+        current_node->next = deleted_node->next;
     }
-
-    new_list->tail = current_node->next;
-    free(target_node);
-    target_node = NULL;
-    
     new_list->count--;
+    return deleted_node;
 }
 
 void printAll() {
     printf("[");
     if (new_list != NULL) {
-        Node *current_node = new_list->head;
+        node *current_node = new_list->head;
         int i;
 
         for (i = 0; i < new_list->count; i++) {
@@ -109,8 +121,8 @@ void printAll() {
 }
 
 void freeAll() {
-    Node *current_node = new_list->head;
-    Node *next_node = NULL;
+    node *current_node = new_list->head;
+    node *next_node = NULL;
     int i;
 
     for (i = 0; i < new_list->count; i++) {

@@ -8,24 +8,29 @@ int main() {
     insertAt(4, 9);
     printAll();
     // [1, 3, 5, 7, 9]
+    printf("%d\n", new_list->tail->data);
 
     deleteAt(1);
     deleteAt(3);
     printAll();
     // [1, 5, 7]
+    printf("%d\n", new_list->tail->data);
 
     insertAt(2, 10);
     printAll();
     // [1, 5, 10, 7]
+    printf("%d\n", new_list->tail->data);
 
     deleteAt(3);
     deleteAt(1);
     printAll();
     // [1, 10]
+    printf("%d\n", new_list->tail->data);
 
     deleteAt(0);
     printAll();
     // [10]
+    printf("%d\n", new_list->tail->data);
 
     deleteAt(0);
     printAll();
@@ -41,6 +46,7 @@ int main() {
     insertAt(4, 9);
     printAll();
     // [1, 3, 5, 7, 9]
+    printf("%d\n", new_list->tail->data);
 
     freeAll();
     printAll();
