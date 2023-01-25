@@ -23,3 +23,6 @@ console.log(binarySearchTree.search(6));
 
 console.log("============= Search 1 =============")
 console.log(binarySearchTree.search(1));
+
+binarySearchTree.remove(18);
+binarySearchTree.root.inOrderTraversal(binarySearchTree.root);
